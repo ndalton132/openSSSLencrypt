@@ -1,0 +1,31 @@
+#!/bin/bash
+
+echo "Encrypt (t)ext or (f)ile? Decrypt (dt)ext or (df)ile?"
+read inputType
+
+echo "Input filename, or text"
+read userInput
+
+echo "Password for encryption/decryption?"
+read pswd
+
+
+if [ "$inputType" = "t" ]
+then 
+	encrypt=$(echo -n "$userInput" | openssl enc -aes-256-cbc -a -salt -pass pass:$pswd)
+       	echo "Encrypted word: $encrypt"	
+elif [ "$inputType" = "f" ]
+then
+	openssl enc -aes-256-cbc -salt -in $userInput -out $userInput.enc -pass pass:$pswd
+	echo "Encrypted file: $userInput.enc"
+	 
+elif [ "$inputType" = "dt" ]
+then
+	decrypt=$(echo -n "$userInput" | openssl enc -d -aes-256-cbc -a -pass pass:$pswd)
+	echo "Decrypted word: $decrypt"
+elif [ "$inputType" = "df" ]
+then
+	openssl enc -d -aes-256-cbc -salt -in $userInput -out $userInput.dec -pass pass:$pswd
+	echo "Decrypted file: $userInput.dec"
+fi
+
